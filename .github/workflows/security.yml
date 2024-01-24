@@ -1,31 +1,36 @@
 name: Security Workflow
 
 on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
+  workflow_dispatch: {}
 
 jobs:
-  sca:
+  docker:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        requirements:
-          [
-            requirements/one-requirements.txt,
-            requirements/two-requirements.txt,
-            requirements/three-requirements.txt,
-          ]
     steps:
       - uses: actions/checkout@master
-
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/python-3.8@master
+      - uses: snyk/actions/docker@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          COMMAND: pip install -r ${{ matrix.requirements }}
         with:
-          args: --package-manager=pip --file=${{ matrix.requirements }} --command=python3
+          image: snyk/snyk:node12
+          args: --platform=linux/arm64
+  # sca:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       requirements:
+  #         [
+  #           requirements/one-requirements.txt,
+  #           requirements/two-requirements.txt,
+  #           requirements/three-requirements.txt,
+  #         ]
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - name: Run Snyk to check for vulnerabilities
+  #       uses: snyk/actions/python-3.8@master
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #         COMMAND: pip install -r ${{ matrix.requirements }}
+  #       with:
+  #         args: --package-manager=pip --file=${{ matrix.requirements }} --command=python3
