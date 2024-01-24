@@ -11,5 +11,5 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: snyk/snyk:node12
+          image: snyk/snyk:linux
           args: --platform=linux/arm64
