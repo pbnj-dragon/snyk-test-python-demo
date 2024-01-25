@@ -1,15 +1,23 @@
-name: Security Workflow
+name: Container Scanning
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      image:
+        type: string
+        required: true
+        default: ""
 
 jobs:
-  docker:
-    runs-on: ubuntu-latest
+  snyk:
+    runs-on:
+      group: engineering
     steps:
-      - uses: snyk/actions/docker@master
+      - uses: snyk/actions/setup@master
+      - shell: bash
+        run: >
+          snyk container test
+          --platform=linux/arm64
+          ${{ inputs.image }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: nginx:latest
-          args: --platform=linux/arm64
