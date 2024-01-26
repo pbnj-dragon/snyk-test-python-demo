@@ -5,6 +5,7 @@ on:
     inputs:
       image:
         type: string
+        description: "Image to scan"
         required: true
         default: ""
 
@@ -20,3 +21,8 @@ jobs:
           ${{ inputs.image }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: ${{ inputs.image }}
+          trivy-config: trivy.yaml
