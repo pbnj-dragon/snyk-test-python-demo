@@ -7,7 +7,7 @@ on:
         type: string
         description: "Image to scan"
         required: true
-        default: ""
+        default: "nginx:latest"
 
 jobs:
   snyk:
@@ -21,6 +21,9 @@ jobs:
           ${{ inputs.image }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
       - uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
